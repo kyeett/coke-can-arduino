@@ -5,11 +5,12 @@ Simple Arduino project using a capacitive sensor that lights up various LEDs and
 
 | Sprint # |                      Target                     | Completed | Time (actual) |
 |----------|-------------------------------------------------|-----------|---------------|
-|        2 | Git repo, Statemachine, Multi-step state machie |           |            40 (40) |
+|        3 | Play with programmable LED strip                |           | 30 (10)       |
+|        2 | Git repo, Statemachine, Multi-step state machie |           | 40 (40)       |
 |        1 |                                                 |           |               |
 
 #### Todos
-* Investigate Electronics Safety Rules :-)
+* Investigate Electronics Safet y Rules :-)
 * Use Digispark as Arduino
 * Use 12 V output for light
 * Add image of capacity graph
@@ -17,6 +18,7 @@ Simple Arduino project using a capacitive sensor that lights up various LEDs and
 * Add photo of basic setup
 
 #### Done
+* ~~Use programmable LED strip~~
 * ~~Create git repo~~
 * ~~Introduce statemachine   ~~
 * ~~Multi-step statemachine 0 -> 1 -> 2 -> 0~~
