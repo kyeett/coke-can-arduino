@@ -5,17 +5,15 @@ Simple Arduino project using a capacitive sensor that lights up various LEDs and
 
 | Sprint # |                      Target                     | Time (actual) |
 |----------|-------------------------------------------------|---------------|
-|        7 | Add two LED scenarios, Break out square-wave    | 45            |
-|        6 |                                                 | 2h            |
-|        5 | Use digispark as Arduino (CapacitySensor)       | 30            |
+|        7 | Add two LED scenarios, Break out square-wave    | 45 (44)       |
+|        6 | Solder LEDs and mount plastic figure            | (2h+)         |
+|        5 | Use digispark as Arduino (CapacitySensor)       | 30 (48)       |
 |        4 | Use digispark as Arduino (LED)                  | 30 (47)       |
 |        3 | Play with programmable LED strip                | 30 (10)       |
 |        2 | Git repo, Statemachine, Multi-step state machie | 40 (40)       |
 |        1 |                                                 |               |
 
 #### Todos
-* Break out Square-wave multiplier function 
-* Add all two LED scenarios
 * Add all 7 LED scenarios
 * Investigate Electronics Safet y Rules :-)
 * Use Digispark as Arduino (CapacitySensor)
@@ -25,10 +23,12 @@ Simple Arduino project using a capacitive sensor that lights up various LEDs and
 * Add photo of basic setup
 
 #### Done
+* ~~Break out Square-wave multiplier function~~
+* ~~Add all two LED scenarios~~
 * ~~Use Digispark as Arduino (LED)~~
 * ~~Use programmable LED strip~~
 * ~~Create git repo~~
-* ~~Introduce statemachine   ~~
+* ~~Introduce statemachine~~
 * ~~Multi-step statemachine 0 -> 1 -> 2 -> 0~~
 
 #### References
