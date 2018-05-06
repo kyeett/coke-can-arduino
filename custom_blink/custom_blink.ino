@@ -18,10 +18,6 @@ CapacitiveSensor cs_4_8 = CapacitiveSensor(4,8); // 1M resistor
 #define COLOR_GREEN   103
 #define COLOR_BLUE    160 
 
-// Scenarios
-#define OFF           0
-#define HEART_ONLY    1
-#define PARTY_MODE    2
 
 // LED NAMES
 #define LEFT_EYE_LED  0
@@ -63,10 +59,41 @@ bool square_filter(int slot_length, int total_slots, int num_high_slots, int val
   }
 }
 
+// Scenarios
+/*
+|         Name        |    Heart    |    Eyes   |  Ground  |
+|---------------------|-------------|-----------|----------|
+| OFF                 |             |           |          |
+| HEART               | Blink       |           |          |
+| HEART_EYES          | Blink       | Blink     |          |
+| HEART_CONSTANT_EYES | Blink       | Constant  |          |
+| ALL                 | Blink       | Constant  | Sweep    |
+| CONSTANT_HEART      | Constant    |           |          |
+| CONSTANT_HEART_EYES | Constant    | Constant  |          |
+| CONSTANT_ALL        | Constant    | Constant  | Constant |
+| PARTY_MODE          | Double time | Long fade | Blink    |
+*/
+#define OFF                 0
+#define CONSTANT_HEART      1
+#define CONSTANT_HEART_EYES 2
+#define CONSTANT_ALL        3
+
+#define OFF_2               4 //Added for symmetry
+#define HEART               5
+#define HEART_EYES          6
+#define HEART_CONSTANT_EYES 7
+#define ALL                 8
+
+#define OFF_3               9 //Added for symmetry
+
+#define PARTY_MODE    99
+
+#define NUMBER_OF_SCENARIOS 9
+
 // Application variables
 int i = 0;
 int offset_i;               // Used to offset LEDs
-int scenario = PARTY_MODE;  // Initial scenario
+int scenario = ALL;  // Initial scenario
 int number_of_scenarios = 3; 
 bool sensor_is_touched_last_round = false;
 
@@ -87,72 +114,108 @@ void loop() {
   // Change state only when sensors goes from low to high
   if(sensor_is_touched_this_round && !sensor_is_touched_last_round)
   {
-    scenario = (scenario + 1) % number_of_scenarios;
+    scenario = (scenario + 1) % NUMBER_OF_SCENARIOS;
   }
   sensor_is_touched_last_round = sensor_is_touched_this_round;
   Serial.println(scenario);
 
   EVERY_N_MILLISECONDS(2) {
-    i = (i + 6) % (256*6);
+    i = (i + 5) % (256*6);
     //Serial.println(i);
     
     // EYE LEDS
     offset_i = i + 66;
     switch (scenario) {
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
+
+      // Constant
+      case HEART_CONSTANT_EYES:
+      case ALL:
+      case CONSTANT_HEART_EYES:
+      case CONSTANT_ALL:
+        leds[LEFT_EYE_LED]  = CHSV( COLOR_BLUE, 255, 255);
+        leds[RIGHT_EYE_LED]  = CHSV( COLOR_BLUE, 255, 255);
+        break;
+
+      // Blink
+      case HEART_EYES:
         leds[LEFT_EYE_LED]  = scn_square_wave(offset_i, COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
         leds[RIGHT_EYE_LED] = scn_square_wave(offset_i, COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
         break;
+
+      // Special: Long blink (TODO)
+      case PARTY_MODE:
+        leds[HEART_LED] = scn_heartbeat(i, COLOR_RED, 80, HEARTBEAT_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, i));
+        break;
+      
+      case OFF:
       default:
         leds[LEFT_EYE_LED] = CRGB::Black;
         leds[RIGHT_EYE_LED] = CRGB::Black;
         break;
     }
-    if(scenario == 1) {
-
-    }
 
     // HEART LED
     switch (scenario) {
-      case HEART_ONLY:
-      case PARTY_MODE:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
+
+      // Blinking
+      case HEART:
+      case HEART_EYES:
+      case HEART_CONSTANT_EYES:
+      case ALL:
         leds[HEART_LED] = scn_heartbeat(i, COLOR_RED, 80, HEARTBEAT_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, i));
         break;
+ 
+      // Constant heart
+      case CONSTANT_HEART:
+      case CONSTANT_HEART_EYES:
+      case CONSTANT_ALL:
+        leds[HEART_LED]  = CHSV( COLOR_RED, 255*0.8, 255);
+        leds[HEART_LED]  = CHSV( COLOR_RED, 255*0.8, 255);
+        break;
+      
+      // Special: Double time (TODO)
+      case PARTY_MODE:
+        leds[HEART_LED] = scn_heartbeat(i, COLOR_RED, 80, HEARTBEAT_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, i));
+        break;
+      
+      // Off
+      case OFF:
       default:
         leds[HEART_LED] = CRGB::Black;
         break;
     }
 
     // GROUND LEDS
+    for(int j = 0; j < 4; j++) {
+      offset_i = i - j*64 + GROUND_RANDOM_OFFSET;
+      
       switch (scenario) {
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case PARTY_MODE:
-        for(int j = 0; j < 4; j++) {
-          offset_i = i - j*64 + GROUND_RANDOM_OFFSET;
-          leds[GROUND_LED + j] = scn_heartbeat(offset_i, COLOR_GREEN, 80, GROUND_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
-        }
-        break;
-      default:
-        for(int j = 0; j < 4; j++) {
-          offset_i = i - j*64 + GROUND_RANDOM_OFFSET;
-          leds[GROUND_LED + j] = CRGB::Black;
-        }
-        break;
+
+        // Constant
+        case CONSTANT_ALL:
+            leds[GROUND_LED + j] = CHSV( COLOR_GREEN, 255*0.8, 255);
+          break;
+
+        // Sweeping
+        case ALL:
+            leds[GROUND_LED + j] = scn_heartbeat(offset_i, COLOR_GREEN, 80, GROUND_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
+          break;
+
+        // Special: Blink (TODO)
+        case PARTY_MODE:
+            leds[GROUND_LED + j] = scn_heartbeat(offset_i, COLOR_GREEN, 80, GROUND_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
+          break;
+          
+        // Off
+        case OFF:
+        default:
+            leds[GROUND_LED + j] = CRGB::Black;
+          break;
+      }
     }
 
     //Update LEDs
     FastLED.show();
   }
+  delay(3);
 }
