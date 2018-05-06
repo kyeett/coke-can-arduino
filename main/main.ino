@@ -55,7 +55,7 @@ void loop() {
 
   // Check if sensor is considered touched
   sensor_is_touched_this_round = sensor1 > 1000;
-  Serial.println(state);  // print sensor output 
+  Serial.println(sensor1);  // print sensor output 
 
   // Change state only when sensors goes from low to high
   if(sensor_is_touched_this_round && !sensor_is_touched_last_round)
