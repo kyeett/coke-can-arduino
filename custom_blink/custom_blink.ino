@@ -32,7 +32,7 @@ void setup() {
 }
 
 
-CHSV scn_square_wave(int i, int hue, int saturation, bool is_on) {
+CHSV scn_square_wave(int hue, int saturation, bool is_on) {
 
   CHSV temp = CHSV( 0, 255, 0);
   if(is_on) {
@@ -79,21 +79,20 @@ bool square_filter(int slot_length, int total_slots, int num_high_slots, int val
 #define CONSTANT_ALL        3
 
 #define OFF_2               4 //Added for symmetry
-#define HEART               5
-#define HEART_EYES          6
-#define HEART_CONSTANT_EYES 7
-#define ALL                 8
+#define PARTY_MODE          5
 
-#define OFF_3               9 //Added for symmetry
+#define OFF_3               6 //Added for symmetry
+#define HEART               7
+#define HEART_EYES          8
+#define HEART_CONSTANT_EYES 9
+#define ALL                 10
 
-#define PARTY_MODE    99
-
-#define NUMBER_OF_SCENARIOS 9
+#define NUMBER_OF_SCENARIOS 11
 
 // Application variables
 int i = 0;
 int offset_i;               // Used to offset LEDs
-int scenario = ALL;  // Initial scenario
+int scenario = PARTY_MODE;  // Initial scenario
 int number_of_scenarios = 3; 
 bool sensor_is_touched_last_round = false;
 
@@ -105,10 +104,13 @@ void loop() {
   int GROUND_SILENT_PERIOD = 6;
   int GROUND_RANDOM_OFFSET = 652; //Chosen by dice roll
 
+  // Party mode
+  int PARTY_FREQUENCY = 1;
+  
   long current_sensor_value =  cs_4_8.capacitiveSensor(50);
   
   // Check if sensor is considered touched
-  bool sensor_is_touched_this_round = current_sensor_value > 1000;
+  bool sensor_is_touched_this_round = current_sensor_value > 500;
     // print sensor output
    
   // Change state only when sensors goes from low to high
@@ -117,10 +119,11 @@ void loop() {
     scenario = (scenario + 1) % NUMBER_OF_SCENARIOS;
   }
   sensor_is_touched_last_round = sensor_is_touched_this_round;
-  Serial.println(scenario);
+  //Serial.println(scenario);
+  Serial.println(current_sensor_value);
 
   EVERY_N_MILLISECONDS(2) {
-    i = (i + 5) % (256*6);
+    i = (i + 8) % (256*6);
     //Serial.println(i);
     
     // EYE LEDS
@@ -138,13 +141,14 @@ void loop() {
 
       // Blink
       case HEART_EYES:
-        leds[LEFT_EYE_LED]  = scn_square_wave(offset_i, COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
-        leds[RIGHT_EYE_LED] = scn_square_wave(offset_i, COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
+        leds[LEFT_EYE_LED]  = scn_square_wave(COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
+        leds[RIGHT_EYE_LED] = scn_square_wave(COLOR_BLUE, 100, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
         break;
 
       // Special: Long blink (TODO)
       case PARTY_MODE:
-        leds[HEART_LED] = scn_heartbeat(i, COLOR_RED, 80, HEARTBEAT_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, i));
+        leds[LEFT_EYE_LED]  = scn_heartbeat(i, COLOR_GREEN + i/4, 100, PARTY_FREQUENCY, square_filter(SLOT_LENGTH, 2, 1, i));
+        leds[RIGHT_EYE_LED]  = scn_heartbeat(i+SLOT_LENGTH, COLOR_GREEN + i/4, 100, PARTY_FREQUENCY, square_filter(SLOT_LENGTH, 2, 1, i+SLOT_LENGTH));
         break;
       
       case OFF:
@@ -173,9 +177,9 @@ void loop() {
         leds[HEART_LED]  = CHSV( COLOR_RED, 255*0.8, 255);
         break;
       
-      // Special: Double time (TODO)
+      // Special: Double time
       case PARTY_MODE:
-        leds[HEART_LED] = scn_heartbeat(i, COLOR_RED, 80, HEARTBEAT_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, i));
+        leds[HEART_LED] = scn_heartbeat(2*i, COLOR_RED, 80, PARTY_FREQUENCY, square_filter(SLOT_LENGTH, 2, 1, i));
         break;
       
       // Off
@@ -201,9 +205,9 @@ void loop() {
             leds[GROUND_LED + j] = scn_heartbeat(offset_i, COLOR_GREEN, 80, GROUND_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
           break;
 
-        // Special: Blink (TODO)
+        // Special: Blink
         case PARTY_MODE:
-            leds[GROUND_LED + j] = scn_heartbeat(offset_i, COLOR_GREEN, 80, GROUND_FREQUENCY, square_filter(SLOT_LENGTH, HEARTBEAT_TOTAL_SLOTS, 1, offset_i));
+            leds[GROUND_LED + j] = scn_heartbeat(i, COLOR_GREEN + i/4, 100, PARTY_FREQUENCY, true);
           break;
           
         // Off
@@ -217,5 +221,5 @@ void loop() {
     //Update LEDs
     FastLED.show();
   }
-  delay(3);
+  delay(10);
 }

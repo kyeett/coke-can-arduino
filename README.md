@@ -3,34 +3,41 @@ Simple Arduino project using a capacitive sensor that lights up various LEDs and
 
 #### Iterations
 
-| Sprint # |                      Target                      | Time (actual) |
-|----------|--------------------------------------------------|---------------|
-|       10 |                                                  |               |
-|       10 | Add Party Mode scenario                          | 40 ()           |
-|        9 | Add 7 basic LED scenarios, name scenarios        | 30 (49)       |
-|        8 | Use capacitive sensor with LED + switch scenario | 45 (31)       |
-|        7 | Add two LED scenarios, Break out square-wave     | 45 (44)       |
-|        6 | Solder LEDs and mount plastic figure             | (2h+)         |
-|        5 | Use digispark as Arduino (CapacitySensor)        | 30 (48)       |
-|        4 | Use digispark as Arduino (LED)                   | 30 (47)       |
-|        3 | Play with programmable LED strip                 | 30 (10)       |
-|        2 | Git repo, Statemachine, Multi-step state machie  | 40 (40)       |
-|        1 |                                                  |               |
+| Sprint # |                       Target                       |  Time (actual)   |
+|----------|----------------------------------------------------|------------------|
+|       13 | Add gif of final result                            | 15 ()            |
+|       12 | Fix short cirtcuit bug (temporarily)               | (15)             |
+|       11 | Add Party Mode scenario                            | 40 (25)          |
+|       10 | Glue eyes to body, Fix sensitivity, build pedistal | (2h+)            |
+|        9 | Add 7 basic LED scenarios, name scenarios          | 30 (49)          |
+|        8 | Use capacitive sensor with LED + switch scenario   | 45 (31)          |
+|        7 | Add two LED scenarios, Break out square-wave       | 45 (44)          |
+|        6 | Solder LEDs and mount plastic figure               | (2h+)            |
+|        5 | Use digispark as Arduino (CapacitySensor)          | 30 (48)          |
+|        4 | Use digispark as Arduino (LED)                     | 30 (47)          |
+|        3 | Play with programmable LED strip                   | 30 (10)          |
+|        2 | Git repo, Statemachine, Multi-step state machie    | 40 (40)          |
+|        1 | ?                                                  | ?                |
+|          |                                                    | **Total:** 9h30+ |
 
 
 
-#### Todos
-* Add Party Mode scenario
-* Glue EYE Leds to body
-* Fix sensitivity issues with sensor
-* Investigate Electronics Safet y Rules :-)
+### Todos
+* Add gif video of final result
+
+##### MAYBEs
 * Use Digispark as Arduino (CapacitySensor)
+* Investigate Electronics Safet y Rules :-)
 * Use 12 V output for light
 * Add image of capacity graph
 * Add image of state machine
 * Add photo of basic setup
 
-#### Done
+### Done
+* ~~Build pedistal for Moon man~~
+* ~~Fix sensitivity issues with sensor~~
+* ~~Add Party Mode scenario~~
+* ~~Glue EYE Leds to body~~
 * ~~Name scenarios~~
 * ~~Add 7 LED scenarios~~
 * ~~Use capacitive sensor in parallel to LEDs~~
