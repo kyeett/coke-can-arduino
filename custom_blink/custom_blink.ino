@@ -78,22 +78,21 @@ bool square_filter(int slot_length, int total_slots, int num_high_slots, int val
 #define CONSTANT_HEART_EYES 2
 #define CONSTANT_ALL        3
 
-#define OFF_2               4 //Added for symmetry
-#define PARTY_MODE          5
+#define OFF_3               4 //Added for symmetry
+#define HEART               5
+#define HEART_EYES          6
+#define HEART_CONSTANT_EYES 7
+#define ALL                 8
 
-#define OFF_3               6 //Added for symmetry
-#define HEART               7
-#define HEART_EYES          8
-#define HEART_CONSTANT_EYES 9
-#define ALL                 10
+#define OFF_3               9 //Added for symmetry
+#define PARTY_MODE          10
 
 #define NUMBER_OF_SCENARIOS 11
 
 // Application variables
 int i = 0;
 int offset_i;               // Used to offset LEDs
-int scenario = PARTY_MODE;  // Initial scenario
-int number_of_scenarios = 3; 
+int scenario = HEART;  // Initial scenario
 bool sensor_is_touched_last_round = false;
 
 void loop() { 
